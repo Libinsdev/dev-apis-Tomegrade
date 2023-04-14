@@ -14,4 +14,11 @@ urlpatterns = [
     path('api/courses/offered/<str:pk>/',views.university_course,name="university_course"),
     path('api/course_books/<str:pk>/',views.course_books,name='course-books'),
     path('api/upload',views.upload_data,name='upload'),
+    path('api/addtocart/',views.addtocart,name='addtocart'),
+    path('api/getcartitems/',views.getcartitems,name='getcartitems'),
+    path('api/inccartcount/<str:pk>/',views.incitem,name='inccartitem'),
+    path('api/deccount/<str:pk>/',views.deccount,name='deccount'),
+    path('api/removeitem/<str:pk>/',views.removeitem,name='removeitem'),
+    path('api/cart_subtotal/',views.subtotal,name='cart_subtotal'),
+    
 ]

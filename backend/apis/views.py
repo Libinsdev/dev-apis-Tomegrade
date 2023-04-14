@@ -14,6 +14,7 @@ from django.core.files.base import ContentFile
 from rest_framework.views import APIView
 from django.core.files.storage import FileSystemStorage
 import csv
+from django.db.models import F
 
 
 
@@ -123,6 +124,69 @@ def upload_data(request):
     books.objects.bulk_create(book_list)
 
     return Response('uploaded')
+
+
+@api_view(['POST'])
+def addtocart(request):
+    data=request.data
+    user=request.user
+ 
+    usercart.objects.create(
+        user=user,
+        book_name=data['bookname'],
+        quantity=data['quantity'],
+        price=data['price'],
+        
+    )
+
+    return Response('cart item added')
+
+@api_view(['GET'])
+def getcartitems(request):
+    user=request.user
+    items=usercart.objects.all().filter(user=user)
+    response=[]
+    for x in items:
+        serializer=CartItemsSerializer(x)
+        response.append(serializer.data)
+    return Response(response)
+
+@api_view(['POST'])
+def incitem(request,pk):
+    cartitem=usercart.objects.get(uuid=pk)
+    cartitem.quantity = F('quantity') + 1
+    cartitem.save()
+    return Response("item count incrised")
+
+@api_view(['POST'])
+def deccount(request,pk):
+    cartitem=usercart.objects.get(uuid=pk)
+    cartitem.quantity = F('quantity') - 1
+    cartitem.save()
+    return Response("cart count decresed")
+
+@api_view(['POST'])
+def removeitem(request,pk):
+    item=usercart.objects.get(uuid=pk)
+    item.delete()
+    return Response("item removed from cart")
+
+@api_view(['GET'])
+def subtotal(request):
+    sub_total=0
+    user=request.user
+    cart=usercart.objects.all().filter(user=user)
+    for x in cart:
+        sub_total +=x.price * x.quantity
+    return Response(sub_total)
+
+
+
+
+
+
+
+
 
 
 

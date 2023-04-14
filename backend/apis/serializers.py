@@ -44,3 +44,22 @@ class CustomSearchSerializer(serializers.ModelSerializer):
         model=books
         fields='__all__'
 
+class CartItemsSerializer(serializers.ModelSerializer):
+
+    price=serializers.SerializerMethodField(method_name='total')
+    sub_total=serializers.SerializerMethodField(method_name='sub_tot')
+
+    class Meta:
+        model=usercart
+        fields=['book_name','quantity','price','sub_total']
+
+    def total(self,cart:usercart):
+        return cart.quantity * cart.price
+    
+    def sub_tot(self,cart:usercart):
+        cart_total=0
+        cart_total+=cart.price * cart.quantity
+        return cart_total
+
+
+
