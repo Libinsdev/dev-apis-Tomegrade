@@ -38,30 +38,37 @@ class userdata(models.Model):
 class usercart(models.Model):
       uuid=models.UUIDField(primary_key=True,default = uuid.uuid4,editable=False)
       user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='user')
-      book_name=models.CharField(max_length=300)
+      book_name=models.CharField(max_length=300,null=True,blank=True)
+      bundle_name=models.CharField(max_length=300,null=True,blank=True)
       quantity=models.IntegerField(1) 
       price=models.IntegerField()
       order_status=models.BooleanField(default=False)
       payment_status=models.BooleanField(default=False)
       cancel_order=models.BooleanField(default=False)
       sub_total=models.PositiveSmallIntegerField(default=0,blank=True,null=True)
-      
-   
+
+
+class bundlecart(models.Model):
+      uuid=models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
+      user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='bundlecart')
+      bundle_name=models.ManyToManyField(books,related_name='bundle')
+
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
-	
 	if created:
-		userdata.objects.create(user=instance)
+		userdata.objects.create(user=instance) and bundlecart.objects.create(user=instance)
+                
 		print('Profile created!')
-
+    
 post_save.connect(create_profile, sender=User)
 
 @receiver(post_save, sender=User)
 def update_profile(sender, instance, created, **kwargs):
 	
 	if created == False:
-		instance.userdata.save()
+		instance.userdata.save() and instance.bundlecart.save()
+                
 		print('Profile updated!')
 
 post_save.connect(update_profile, sender=User)

@@ -141,14 +141,43 @@ def addtocart(request):
 
     return Response('cart item added')
 
+@api_view(['POST'])
+def addbundlecart(request):
+   
+    data=request.data
+    sem=data['semester']
+    branch=data['eng_branch']
+
+    
+    book=books.objects.all().filter(semester=sem,eng_branch=branch)
+    book_bundle=bundlecart.objects.get(user=request.user)
+    if(book_bundle):
+        for x in book:
+            book_bundle.bundle_name.add(x)
+  
+
+    return Response('bundle added')
+
+@api_view(['POST'])
+def bundlebookremove(request,pk):
+    book_bundle=bundlecart.objects.get(user=request.user)
+    book=books.objects.all().get(id=pk)
+    print(book.book_name)
+    if(book_bundle):
+        book_bundle.bundle_name.remove(book)
+    
+    return Response("Book removed from bundle")
+
+
 @api_view(['GET'])
 def getcartitems(request):
     user=request.user
     items=usercart.objects.all().filter(user=user)
     response=[]
     for x in items:
-        serializer=CartItemsSerializer(x)
-        response.append(serializer.data)
+        if(x.order_status==False):
+            serializer=CartItemsSerializer(x)
+            response.append(serializer.data)
     return Response(response)
 
 @api_view(['POST'])
@@ -179,6 +208,7 @@ def subtotal(request):
     for x in cart:
         sub_total +=x.price * x.quantity
     return Response(sub_total)
+
 
 
 

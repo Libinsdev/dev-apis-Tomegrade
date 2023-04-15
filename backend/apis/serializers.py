@@ -51,7 +51,7 @@ class CartItemsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=usercart
-        fields=['book_name','quantity','price','sub_total']
+        fields=['book_name','quantity','price','sub_total','bundle_name']
 
     def total(self,cart:usercart):
         return cart.quantity * cart.price

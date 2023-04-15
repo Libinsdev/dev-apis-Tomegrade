@@ -8,4 +8,5 @@ admin.site.register(courses)
 admin.site.register(course_offer_university)
 admin.site.register(userdata)
 admin.site.register(usercart)
-
+admin.site.register(bundlecart)
+ 

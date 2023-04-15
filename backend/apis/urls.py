@@ -20,5 +20,7 @@ urlpatterns = [
     path('api/deccount/<str:pk>/',views.deccount,name='deccount'),
     path('api/removeitem/<str:pk>/',views.removeitem,name='removeitem'),
     path('api/cart_subtotal/',views.subtotal,name='cart_subtotal'),
+    path('api/bundleadded/',views.addbundlecart,name='addbundlecart'),
+    path('api/bundleremove/<int:pk>/',views.bundlebookremove,name='bundleremove'),
     
 ]
