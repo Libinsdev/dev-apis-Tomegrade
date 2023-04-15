@@ -173,7 +173,12 @@ def bundlebookremove(request,pk):
 def getcartitems(request):
     user=request.user
     items=usercart.objects.all().filter(user=user)
+    bundle=bundlecart.objects.all().get(user=user)
+    # bundle also required simlar in orders also
     response=[]
+    if(bundle):
+        serializer=BundleItemsSerializer(bundle)
+        response.append(serializer.data)
     for x in items:
         if(x.order_status==False):
             serializer=CartItemsSerializer(x)
@@ -208,6 +213,18 @@ def subtotal(request):
     for x in cart:
         sub_total +=x.price * x.quantity
     return Response(sub_total)
+
+@api_view(['POST'])
+def checkoutdetails(request):
+    details=userdata.objects.all().get(user=request.user)
+    data=request.data
+    if(details):
+        details.address=data['address']
+        details.phone=data['phone']
+        details.save()
+    return Response("User data saved")
+
+
 
 
 

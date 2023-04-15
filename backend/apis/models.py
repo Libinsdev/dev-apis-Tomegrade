@@ -13,6 +13,7 @@ class books(models.Model):
     auther=models.TextField(max_length=300,null=True)
     semester=models.TextField(max_length=100)
     eng_branch=models.TextField(max_length=100)
+    price=models.IntegerField(default=550,null=True,blank=True)
 
     def __str__(self):
         return self.course_name

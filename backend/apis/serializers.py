@@ -62,4 +62,11 @@ class CartItemsSerializer(serializers.ModelSerializer):
         return cart_total
 
 
+class BundleItemsSerializer(serializers.ModelSerializer):
+
+    bundle_name = coursebooksSerializer(read_only=True,many=True)
+    class Meta:
+        model=bundlecart
+        fields=['bundle_name'] 
+
 

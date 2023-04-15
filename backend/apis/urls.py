@@ -22,5 +22,6 @@ urlpatterns = [
     path('api/cart_subtotal/',views.subtotal,name='cart_subtotal'),
     path('api/bundleadded/',views.addbundlecart,name='addbundlecart'),
     path('api/bundleremove/<int:pk>/',views.bundlebookremove,name='bundleremove'),
+    path('api/checkoutdetails/',views.checkoutdetails,name='checkoutdetails'),
     
 ]
